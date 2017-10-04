@@ -1,133 +1,98 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import values from 'lodash/values';
-import * as BooksAPI from './BooksAPI';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import Book from "./Book";
+import * as BooksAPI from "./BooksAPI";
 
 class Home extends Component {
-	state = {
+	constructor(props) {
+    super(props);
+    this.moveBook = this.moveBook.bind(this);
+	}
+
+  state = {
 		books: []
-	}
+  };
 
-	componentDidMount() {
-		BooksAPI.getAll().then((books) => {
-			this.setState({ books });
-		});
-	}
+  componentDidMount() {
+    BooksAPI.getAll().then(books => {
+      this.setState({ books });
+    });
+  }
 
-	moveBook(e, book) {
-		e.preventDefault();
-		let nextBookState = e.target.options[e.target.selectedIndex].value
-		book.shelf = nextBookState;
-		this.setState((state) => ({
-			books: state.books.filter(b => b.id !== book.id).concat(book)
-		}))
-	}
+  moveBook(e, book) {
+    e.preventDefault();
+    let nextBookState = e.target.options[e.target.selectedIndex].value;
+    book.shelf = nextBookState;
+    this.setState(state => ({
+      books: state.books.filter(b => b.id !== book.id).concat(book)
+    }));
+  }
 
-	render() {
-		const books = this.state.books
-		return (
-			<div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-            <div className="list-books-content">
-              <div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Currently Reading</h2>
-                  <div className="bookshelf-books">
-											<ol className="books-grid">
-												{books.map((book, index) => {
-													if (book.shelf === "currentlyReading") {
-														return (
-															<li key={index}>
-															<div className="book">
-																<div className="book-top">
-																	<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
-																	<div className="book-shelf-changer">
-																		<select onChange={(e) => this.moveBook(e, book)} value={book.shelf}>
-																			<option value="none" disabled>Move to...</option>
-																			<option value="currentlyReading">Currently Reading</option>
-																			<option value="wantToRead">Want to Read</option>
-																			<option value="read">Read</option>
-																			<option value="none">None</option>
-																		</select>
-																	</div>
-																</div>
-																<div className="book-title">{book.title}</div>
-																<div className="book-authors">{book.authors}</div>
-															</div>
-														</li>
-														)
-													}
-												})}
-											</ol>
-										</div>
-									</div>
-									<div className="bookshelf">
-										<h2 className="bookshelf-title">Want to Read</h2>
-										<div className="bookshelf-books">
-											<ol className="books-grid">
-											{books.map((book, index) => {
-											 if (book.shelf === 'wantToRead') {
-												return (
-												<li key={index}>
-												<div className="book">
-													<div className="book-top">
-														<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
-														<div className="book-shelf-changer">
-															<select onChange={(e) => this.moveBook(e, book)} value={book.shelf}>
-																<option value="none" disabled>Move to...</option>
-																<option value="currentlyReading">Currently Reading</option>
-																<option value="wantToRead">Want to Read</option>
-																<option value="read">Read</option>
-																<option value="none">None</option>
-															</select>
-														</div>
-													</div>
-													<div className="book-title">{book.title}</div>
-													<div className="book-authors">{book.authors}</div>
-												</div>
-											</li>
-											)}})}
-										</ol>
-										</div>
-									</div>
-									<div className="bookshelf">
-										<h2 className="bookshelf-title">Read</h2>
-										<div className="bookshelf-books">
-										<ol className="books-grid">
-										{books.map((book, index) => {
-											if (book.shelf === 'read') {
-											return (
-											<li key={index}>
-											<div className="book">
-												<div className="book-top">
-													<div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
-													<div className="book-shelf-changer">
-														<select onChange={(e) => this.moveBook(e, book)} value={book.shelf}>
-															<option value="none" disabled>Move to...</option>
-															<option value="currentlyReading">Currently Reading</option>
-															<option value="wantToRead">Want to Read</option>
-															<option value="read">Read</option>
-															<option value="none">None</option>
-														</select>
-													</div>
-												</div>
-												<div className="book-title">{book.title}</div>
-												<div className="book-authors">{book.authors}</div>
-											</div>
-										</li>
-										)}})}
-									</ol>
-                  </div>
-                </div>
+  render() {
+    const books = this.state.books;
+    return (
+      <div className="list-books">
+        <div className="list-books-title">
+          <h1>MyReads</h1>
+        </div>
+        <div className="list-books-content">
+          <div>
+            <div className="bookshelf">
+              <h2 className="bookshelf-title">Currently Reading</h2>
+              <div className="bookshelf-books">
+                <ol className="books-grid">
+                  {books.map((book, index) => {
+                    if (book.shelf === "currentlyReading") {
+                      return (
+                        <li key={index}>
+                          <Book book={book} moveBook={this.moveBook}/>
+                        </li>
+                      );
+                    }
+                  })}
+                </ol>
               </div>
             </div>
-						<div className="open-search">
-							<Link to="/search">Add a book</Link>
+            <div className="bookshelf">
+              <h2 className="bookshelf-title">Want to Read</h2>
+              <div className="bookshelf-books">
+                <ol className="books-grid">
+                  {books.map((book, index) => {
+                    if (book.shelf === "wantToRead") {
+                      return (
+                        <li key={index}>
+                          <Book book={book} moveBook={this.moveBook} />
+                        </li>
+                      );
+                    }
+                  })}
+                </ol>
+              </div>
+            </div>
+            <div className="bookshelf">
+              <h2 className="bookshelf-title">Read</h2>
+              <div className="bookshelf-books">
+                <ol className="books-grid">
+                  {books.map((book, index) => {
+                    if (book.shelf === "read") {
+                      return (
+                        <li key={index}>
+                          <Book book={book} moveBook={this.moveBook} />
+                        </li>
+                      );
+                    }
+                  })}
+                </ol>
+              </div>
             </div>
           </div>
-        )}
+        </div>
+        <div className="open-search">
+          <Link to="/search">Add a book</Link>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Home;
