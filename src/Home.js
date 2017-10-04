@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Book from "./Book";
 import Bookshelf from "./Bookshelf";
 import * as BooksAPI from "./BooksAPI";
 
