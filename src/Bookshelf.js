@@ -12,7 +12,7 @@ const Bookshelf = props => {
               <li key={index}>
                 <Book book={book} moveBook={props.moveBook} />
               </li>
-            );
+            )
           })}
         </ol>
       </div>

@@ -12,12 +12,12 @@ class Home extends Component {
 
   state = {
     books: []
-  };
+  }
 
   componentDidMount() {
     BooksAPI.getAll().then(books => {
       this.setState({ books });
-    });
+    })
   }
 
   moveBook(e, book) {
@@ -26,11 +26,12 @@ class Home extends Component {
     book.shelf = nextBookState;
     this.setState(state => ({
       books: state.books.filter(b => b.id !== book.id).concat(book)
-    }));
+		}));
+		BooksAPI.update(book, nextBookState);
   }
 
   render() {
-    const books = this.state.books;
+    const books = this.state.books
     return (
       <div className="list-books">
         <div className="list-books-title">

@@ -16,12 +16,16 @@ class Search extends Component {
         this.setState({ books });
       });
     }
-  }
+	}
 
-  addBook(e, book) {
+	addBook(e, book) {
     e.preventDefault();
     let nextBookState = e.target.options[e.target.selectedIndex].value;
-    BooksAPI.update(book, nextBookState);
+    book.shelf = nextBookState;
+    this.setState(state => ({
+      books: state.books.filter(b => b.id !== book.id).concat(book)
+		}));
+		BooksAPI.update(book, nextBookState);
   }
 
   render() {
