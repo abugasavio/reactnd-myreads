@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Book from "./Book";
+import Bookshelf from "./Bookshelf";
 import * as BooksAPI from "./BooksAPI";
 
 class Home extends Component {
-	constructor(props) {
+  constructor(props) {
     super(props);
     this.moveBook = this.moveBook.bind(this);
-	}
+  }
 
   state = {
-		books: []
+    books: []
   };
 
   componentDidMount() {
@@ -37,54 +38,21 @@ class Home extends Component {
         </div>
         <div className="list-books-content">
           <div>
-            <div className="bookshelf">
-              <h2 className="bookshelf-title">Currently Reading</h2>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {books.map((book, index) => {
-                    if (book.shelf === "currentlyReading") {
-                      return (
-                        <li key={index}>
-                          <Book book={book} moveBook={this.moveBook}/>
-                        </li>
-                      );
-                    }
-                  })}
-                </ol>
-              </div>
-            </div>
-            <div className="bookshelf">
-              <h2 className="bookshelf-title">Want to Read</h2>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {books.map((book, index) => {
-                    if (book.shelf === "wantToRead") {
-                      return (
-                        <li key={index}>
-                          <Book book={book} moveBook={this.moveBook} />
-                        </li>
-                      );
-                    }
-                  })}
-                </ol>
-              </div>
-            </div>
-            <div className="bookshelf">
-              <h2 className="bookshelf-title">Read</h2>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {books.map((book, index) => {
-                    if (book.shelf === "read") {
-                      return (
-                        <li key={index}>
-                          <Book book={book} moveBook={this.moveBook} />
-                        </li>
-                      );
-                    }
-                  })}
-                </ol>
-              </div>
-            </div>
+            <Bookshelf
+              moveBook={this.moveBook}
+              books={books.filter(book => book.shelf === "currentlyReading")}
+              title="Currently Reading"
+            />
+            <Bookshelf
+              moveBook={this.moveBook}
+              books={books.filter(book => book.shelf === "wantToRead")}
+              title="Want to Read"
+            />
+            <Bookshelf
+              moveBook={this.moveBook}
+              books={books.filter(book => book.shelf === "read")}
+              title="Read"
+            />
           </div>
         </div>
         <div className="open-search">
