@@ -6,11 +6,10 @@ import * as BooksAPI from "./BooksAPI";
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.moveBook = this.moveBook.bind(this);
-  }
-
-  state = {
-    books: []
+		this.moveBook = this.moveBook.bind(this);
+		this.state = {
+			books: []
+		}
   }
 
   componentDidMount() {
