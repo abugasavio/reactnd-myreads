@@ -4,15 +4,37 @@ import Book from "./Book"
 import * as BooksAPI from "./BooksAPI"
 
 class Search extends Component {
-  state = {
-    books: [],
-    searchTerm: ""
-  }
+	constructor(props) {
+		super(props);
+		this.state = {
+			books: [],
+			userBooks: [],
+			searchTerm: ""
+		}
+		this.addBook = this.addBook.bind(this)
+	}
+
+	componentDidMount() {
+    BooksAPI.getAll().then(books => {
+      this.setState({ userBooks: books });
+    })
+	}
+
+	getCurrentBookShelf(book) {
+		let foundBook = this.state.userBooks.find(b => b.id === book.id)
+		if (foundBook) {
+			return foundBook.shelf
+		} else {
+			return book.shelf
+		}
+	}
+
 
   handleSearch(e) {
     let searchTerm = e.target.value;
     if (searchTerm) {
       BooksAPI.search(e.target.value, 20).then(books => {
+				books.map(book => book.shelf = this.getCurrentBookShelf(book))
         this.setState({ books });
       });
     }
